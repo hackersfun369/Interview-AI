@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="title">
+        <h2>INTERVIEW AI</h2>
+    </div>
+
+    <div class="videos">
+        <div class="userCam">
+            <video class="webCam" id="webCam" autoplay playsinline width="400" height="400"></video>
+        </div>
+        <div class="bot">
+            <div class="botImage">
+                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcnQwODN3NGVlNDJpOHk4dW05Y2FxaXNxbzlmeXJ3dHNucHM2ZHhrMyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/S60CrN9iMxFlyp7uM8/giphy.webp" alt="Bot Image">
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="startInterview" onclick="toggleResumePopup(true)">Start Interview</button>
+        <button class="startBtn"><img src="/images/enable_cam1.png" alt="Enable Camera"></button>
+        <button class="stopBtn" style="display: none;"><img src="/images/disable_cam.png" alt="Disable Camera"></button>
+        <button class="endInterview" id="stopinterview">Stop Interview</button>
+    </div>
+
+    <div class="chatBars">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <div class="chatContainer">
+        <div class="container">
+            <div class="texts">
+                <p id="live-text">Listening...</p>
+            </div>
+        </div>
+        <div class="chatbox" id="chatbox"></div>
+    </div>
+
+    <div class="resumeDiv" id="resumeDiv">
+        <div id="uploadResume">
+            <img src="https://pictographic.azureedge.net/thumbnails/lined/xNpCvuJstTrXAgyObciW.png" alt="Upload Resume">
+            <div id="file-input">
+                <input type="file" id="pdf-upload" accept="application/pdf">
+            </div>
+            <div class="buttons">
+                <button class="generateBtn" id="generate-questions">Generate</button>
+                <button id="cancelUpload" onclick="toggleResumePopup(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="questions-container" style="display: none;">
+        <h2>Generated Questions</h2>
+        <ul id="questions-list">
+            <!-- Questions will be appended here -->
+        </ul>
+    </div>
+
+    <div id="pdf-content" style="display: none;">
+        <p>Upload a PDF file to extract its text content here.</p>
+    </div>
+
+    <div class="feedback-display" id="feedback-display" style="display: none;"></div>
+
+    <!-- Missing Report Section -->
+    <div id="report-section" class="report-section">
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const webCamEle = document.getElementById("webCam");
+            const stopBtn = document.querySelector(".stopBtn");
+            const startBtn = document.querySelector(".startBtn");
+            const chatBars = document.querySelector(".chatBars");
+            const generateBtn = document.getElementById("generate-questions");
+            const resumeDiv = document.getElementById("resumeDiv");
+            const chatbox = document.querySelector(".chatbox");
+            const stopinterview = document.getElementById("stopinterview");
+
+
+            generateBtn.addEventListener("click", () => {
+                resumeDiv.style.display = "none";
+                chatbox.innerHTML = "";
+            });
+
+            let mediaStream;
+
+            async function startWebcam() {
+                try {
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    webCamEle.srcObject = mediaStream;
+                } catch (error) {
+                    console.error("Error accessing webcam:", error);
+                }
+            }
+
+            function stopWebcam() {
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                    webCamEle.srcObject = null;
+                }
+            }
+
+            startBtn.addEventListener("click", () => {
+                startWebcam();
+                startBtn.style.display = "none";
+                stopBtn.style.display = "block";
+            });
+
+            stopBtn.addEventListener("click", () => {
+                stopWebcam();
+                stopBtn.style.display = "none";
+                startBtn.style.display = "block";
+            });
+
+            stopinterview.addEventListener("click",()=>{
+                stopWebcam();
+            })
+
+            /* Resume Upload Pop-up */
+            function toggleResumePopup(show) {
+                const popup = document.getElementById("uploadResume");
+                const overlay = document.getElementById("resumeDiv");
+
+                if (show) {
+                    popup.style.display = "flex";
+                    overlay.style.display = "block";
+                } else {
+                    popup.style.display = "none";
+                    overlay.style.display = "none";
+                }
+            }
+
+            // Close pop-up when clicking outside
+            resumeDiv.addEventListener("click", (event) => {
+                if (event.target === resumeDiv) {
+                    toggleResumePopup(false);
+                }
+            });
+
+            window.toggleResumePopup = toggleResumePopup;
+        });
+    </script>
+
+    <!-- Load PDF.js before script.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>

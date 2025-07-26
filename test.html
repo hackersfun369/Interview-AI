@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #pdf-content, #questions-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            max-width: 800px;
+        }
+        #questions-container ul {
+            list-style: none;
+            padding: 0;
+        }
+        #questions-container li {
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Question Generator</h1>
+    <div id="file-input">
+        <input type="file" id="pdf-upload" accept="application/pdf">
+    </div>
+    <div id="pdf-content">
+        <p>Upload a PDF file to extract its text content here.</p>
+    </div>
+    <button id="generate-questions" onclick="generateQuestions()">Generate Questions</button>
+    <div id="questions-container">
+        <h2>Generated Questions</h2>
+        <ul id="questions-list">
+            <!-- Questions will be appended here -->
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="texts">
+            <p id="live-text">Listening...</p>
+        </div>
+    </div>
+    <div class="feedback-display" id="feedback-display"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
